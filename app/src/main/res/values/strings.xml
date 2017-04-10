@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">Inventoree</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Activity title bars -->
+    <string name="editor_title_new">Add product</string>
+    <string name="editor_title_edit">Edit product</string>
+
+    <!-- Labels for list_item elements in MainActivity -->
+    <string name="list_item_price_label">Price: $</string>
+    <string name="list_item_stock_label">Stock: </string>
+    <string name="list_item_buy_button">Buy</string>
+
+    <!-- Labels, buttons, hints for EditorActivity fields -->
+    <string name="editor_product_name_label">Product name</string>
+    <string name="editor_product_price_label">Price</string>
+    <string name="editor_product_stock_label">Stock</string>
+    <string name="editor_product_name_hint">Type product name</string>
+    <string name="editor_product_price_hint">Type  price</string>
+    <string name="editor_product_stock_hint">Type quantity</string>
+    <string name="editor_cancel_button">Cancel</string>
+    <string name="editor_save_button">Save</string>
+
+    <!-- Toast string for EditorActivity -->
+    <string name="no_name_product">Product must have a name</string>
+    <string name="product_update_success">Product updated</string>
+    <string name="product_update_failure">Failed to update product</string>
+    <string name="product_save_success">Product saved</string>
+    <string name="product_save_failure">Unable to save product</string>
+
+    <!-- Placeholders for content_main for building out UI -->
+    <string name="tools_empty">No products in inventory</string>
+
+    <!-- Placeholders for list_item for building out UI -->
+    <string name="tools_list_item_product">Product name</string>
+    <string name="tools_list_item_price_val">0.00</string>
+    <string name="tools_list_item_stock_val">0</string>
+</resources>
