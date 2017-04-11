@@ -4,6 +4,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,12 +13,14 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.zachg.inventoree.data.ProductContract.ProductEntry;
 
@@ -77,12 +80,21 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.main_action_delete) {
-            return true;
+            int rowsDeleted = wipeData();
+            if (rowsDeleted > 0) {
+                getContentResolver().notifyChange(ProductEntry.CONTENT_URI, null);
+                Toast.makeText(this, R.string.main_delete_success, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, R.string.main_delete_failure, Toast.LENGTH_SHORT).show();
+            }
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    int wipeData() {
+        return getContentResolver().delete(ProductEntry.CONTENT_URI, null, null);
     }
 
     /**
@@ -97,17 +109,19 @@ public class MainActivity extends AppCompatActivity
 
         View parent = (View) view.getParent();
         ListView listView = (ListView) parent.getParent();
-        final int id = listView.getPositionForView(parent) + 1;
+        final int id = listView.getPositionForView(parent);
 
         Uri uri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
+        final int position = mAdapter.getCursor().getPosition();
 
         Cursor cursor =
                 getContentResolver().query(uri, projection, null, null, null);
         if (cursor != null) {
+            Log.v("Button Pressed", "cursor not null...id is: " + id + ". pos is: " + position);
             if (cursor.getCount() > 0) {
+                Log.v("Button Pressed", "cursor not empty...");
                 cursor.moveToFirst();
                 int stockCol = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_STOCK);
-                int nameCol = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME);
                 int stock = cursor.getInt(stockCol);
                 cursor.close();
                 if (stock > 0) { // Decrement stock and update product in DB if greater than 0 stock

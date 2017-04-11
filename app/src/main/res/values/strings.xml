@@ -1,9 +1,13 @@
 <resources>
     <string name="app_name">Inventoree</string>
 
-    <!-- Menu options -->
+    <!-- Deletion options -->
     <string name="main_action_delete">Wipe data</string>
     <string name="editor_action_delete">Delete product</string>
+    <string name="main_delete_success">All products deleted</string>
+    <string name="main_delete_failure">Failed to delete products</string>
+    <string name="editor_delete_success">Product deleted</string>
+    <string name="editor_delete_failure">Failed to delete product</string>
 
     <!-- Activity title bars -->
     <string name="editor_title_new">Add product</string>

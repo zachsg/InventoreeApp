@@ -33,6 +33,11 @@ public class ProductCursorAdapter extends CursorAdapter {
         return LayoutInflater.from(context).inflate(R.layout.list_item, parent, false);
     }
 
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        return super.getView(position, convertView, parent);
+    }
+
     /**
      * Binds product's data at current row (already pointed to by cursor) to given list_item.
      * @param view View returned from newView method.
