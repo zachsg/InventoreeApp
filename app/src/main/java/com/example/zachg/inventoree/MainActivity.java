@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity
         ListView listView = (ListView) parent.getParent();
         final int id = listView.getPositionForView(parent);
 
-        Uri uri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
+        Uri uri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, mAdapter.getItemId(id));
         final int position = mAdapter.getCursor().getPosition();
 
         Cursor cursor =
