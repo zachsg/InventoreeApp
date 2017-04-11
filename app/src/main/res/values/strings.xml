@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Inventoree</string>
-    <string name="action_settings">Settings</string>
+
+    <!-- Menu options -->
+    <string name="main_action_delete">Wipe data</string>
+    <string name="editor_action_delete">Delete product</string>
 
     <!-- Activity title bars -->
     <string name="editor_title_new">Add product</string>
