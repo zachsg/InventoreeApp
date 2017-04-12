@@ -52,7 +52,8 @@
     <string name="unsaved_changes_dialog_msg">Discard changes and quit editing?</string>
     <string name="discard">Discard</string>
     <string name="keep_editing">Keep Editing</string>
-    <string name="delete_dialog_msg">Are you sure you want to delete product?</string>
+    <string name="delete_dialog_msg">Are you sure you want to delete this product?</string>
+    <string name="delete_all_dialog_msg">Are you sure you want to delete all products?</string>
     <string name="dialog_delete">Delete</string>
     <string name="dialog_abort">Abort</string>
 </resources>

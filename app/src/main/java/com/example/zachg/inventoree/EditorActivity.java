@@ -88,7 +88,7 @@ public class EditorActivity extends AppCompatActivity
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                // User clicked "Discard" button, navigate to parent activity.
+                                // User clicked "Delete" button, navigate to parent activity.
                                 int rowsDeleted =
                                         getContentResolver().delete(mCurrentProductUri, null, null);
                                 if (rowsDeleted > 0) {
@@ -104,7 +104,6 @@ public class EditorActivity extends AppCompatActivity
                                 finish();
                             }
                         };
-
                 // Show a dialog that notifies the user they have unsaved changes
                 confirmDeleteDialog(deleteButtonClickListener);
                 return true;
@@ -135,7 +134,7 @@ public class EditorActivity extends AppCompatActivity
     private void confirmDeleteDialog(
             DialogInterface.OnClickListener discardButtonClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.delete_dialog_msg);
+        builder.setMessage(R.string.delete_all_dialog_msg);
         builder.setPositiveButton(R.string.dialog_delete, discardButtonClickListener);
         builder.setNegativeButton(R.string.dialog_abort, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
