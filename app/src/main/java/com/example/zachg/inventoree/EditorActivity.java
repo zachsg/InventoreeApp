@@ -32,6 +32,8 @@ public class EditorActivity extends AppCompatActivity
     private EditText mPriceEditText;
     private EditText mStockEditText;
 
+    private int mCurrentStock = 0;
+
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -75,9 +77,6 @@ public class EditorActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         if (id == R.id.editor_action_delete) {
@@ -138,6 +137,24 @@ public class EditorActivity extends AppCompatActivity
             }
             finish();
         }
+    }
+
+    public void decrementStock(View view) {
+        if (!mStockEditText.getText().toString().trim().isEmpty()) {
+            mCurrentStock = Integer.parseInt(mStockEditText.getText().toString().trim());
+        }
+        if (mCurrentStock > 0) {
+            mCurrentStock--;
+            mStockEditText.setText(Integer.toString(mCurrentStock));
+        }
+    }
+
+    public void incrementStock(View view) {
+        if (!mStockEditText.getText().toString().trim().isEmpty()) {
+            mCurrentStock = Integer.parseInt(mStockEditText.getText().toString().trim());
+        }
+        mCurrentStock++;
+        mStockEditText.setText(Integer.toString(mCurrentStock));
     }
 
     @Override
