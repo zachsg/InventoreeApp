@@ -75,9 +75,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         if (id == R.id.main_action_delete) {
@@ -111,7 +108,7 @@ public class MainActivity extends AppCompatActivity
         ListView listView = (ListView) parent.getParent();
         final int id = listView.getPositionForView(parent);
 
-        Uri uri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
+        Uri uri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, mAdapter.getItemId(id));
         final int position = mAdapter.getCursor().getPosition();
 
         Cursor cursor =

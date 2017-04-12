@@ -9,6 +9,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -30,6 +31,8 @@ public class EditorActivity extends AppCompatActivity
     private EditText mNameEditText;
     private EditText mPriceEditText;
     private EditText mStockEditText;
+
+    private int mCurrentStock = 0;
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
@@ -68,21 +71,24 @@ public class EditorActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_editor, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.editor_action_delete) {
-            return true;
+            int rowsDeleted = getContentResolver().delete(mCurrentProductUri, null, null);
+            if (rowsDeleted > 0) {
+                getContentResolver().notifyChange(mCurrentProductUri, null);
+                Toast.makeText(this, R.string.editor_delete_success, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, R.string.editor_delete_failure, Toast.LENGTH_SHORT).show();
+            }
         }
+        finish();
 
         return super.onOptionsItemSelected(item);
     }
@@ -131,6 +137,24 @@ public class EditorActivity extends AppCompatActivity
             }
             finish();
         }
+    }
+
+    public void decrementStock(View view) {
+        if (!mStockEditText.getText().toString().trim().isEmpty()) {
+            mCurrentStock = Integer.parseInt(mStockEditText.getText().toString().trim());
+        }
+        if (mCurrentStock > 0) {
+            mCurrentStock--;
+            mStockEditText.setText(Integer.toString(mCurrentStock));
+        }
+    }
+
+    public void incrementStock(View view) {
+        if (!mStockEditText.getText().toString().trim().isEmpty()) {
+            mCurrentStock = Integer.parseInt(mStockEditText.getText().toString().trim());
+        }
+        mCurrentStock++;
+        mStockEditText.setText(Integer.toString(mCurrentStock));
     }
 
     @Override

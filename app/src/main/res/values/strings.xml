@@ -23,10 +23,12 @@
     <string name="editor_product_price_label">Price</string>
     <string name="editor_product_stock_label">Stock</string>
     <string name="editor_product_name_hint">Type product name</string>
-    <string name="editor_product_price_hint">Type  price</string>
-    <string name="editor_product_stock_hint">Type quantity</string>
+    <string name="editor_product_price_hint">$0.00</string>
+    <string name="editor_product_stock_hint">0</string>
     <string name="editor_cancel_button">Cancel</string>
     <string name="editor_save_button">Save</string>
+    <string name="editor_increment_button">+</string>
+    <string name="editor_decrement_button">-</string>
 
     <!-- Toast string for EditorActivity -->
     <string name="no_name_product">Product must have a name</string>
