@@ -9,6 +9,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -68,7 +69,7 @@ public class EditorActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_editor, menu);
         return true;
     }
 
@@ -79,10 +80,16 @@ public class EditorActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.editor_action_delete) {
-            return true;
+            int rowsDeleted = getContentResolver().delete(mCurrentProductUri, null, null);
+            if (rowsDeleted > 0) {
+                getContentResolver().notifyChange(mCurrentProductUri, null);
+                Toast.makeText(this, R.string.editor_delete_success, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, R.string.editor_delete_failure, Toast.LENGTH_SHORT).show();
+            }
         }
+        finish();
 
         return super.onOptionsItemSelected(item);
     }

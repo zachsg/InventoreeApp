@@ -4,7 +4,6 @@
     tools:context="com.example.zachg.inventoree.MainActivity">
     <item
         android:id="@+id/main_action_delete"
-        android:orderInCategory="100"
         android:title="@string/main_action_delete"
         app:showAsAction="never" />
 </menu>
