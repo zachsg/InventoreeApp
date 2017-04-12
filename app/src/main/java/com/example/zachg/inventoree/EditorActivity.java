@@ -1,12 +1,15 @@
 package com.example.zachg.inventoree;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -79,23 +82,136 @@ public class EditorActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.editor_action_delete) {
-            int rowsDeleted = getContentResolver().delete(mCurrentProductUri, null, null);
-            if (rowsDeleted > 0) {
-                getContentResolver().notifyChange(mCurrentProductUri, null);
-                Toast.makeText(this, R.string.editor_delete_success, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, R.string.editor_delete_failure, Toast.LENGTH_SHORT).show();
-            }
+        switch (id) {
+            case R.id.editor_action_delete:
+                DialogInterface.OnClickListener deleteButtonClickListener =
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // User clicked "Delete" button, navigate to parent activity.
+                                int rowsDeleted =
+                                        getContentResolver().delete(mCurrentProductUri, null, null);
+                                if (rowsDeleted > 0) {
+                                    getContentResolver().notifyChange(mCurrentProductUri, null);
+                                    Toast.makeText(getApplicationContext(),
+                                            R.string.editor_delete_success,
+                                            Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(),
+                                            R.string.editor_delete_failure,
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                                finish();
+                            }
+                        };
+                // Show a dialog that notifies the user they have unsaved changes
+                confirmDeleteDialog(deleteButtonClickListener);
+                return true;
+            case android.R.id.home:
+                if (!mProductChanged) {
+                    NavUtils.navigateUpFromSameTask(EditorActivity.this);
+                    return true;
+                }
+
+                DialogInterface.OnClickListener discardButtonClickListener =
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // User clicked "Discard" button, navigate to parent activity.
+                                NavUtils.navigateUpFromSameTask(EditorActivity.this);
+                            }
+                        };
+
+                // Show a dialog that notifies the user they have unsaved changes
+                showUnsavedChangesDialog(discardButtonClickListener);
+                return true;
         }
         finish();
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void confirmDeleteDialog(
+            DialogInterface.OnClickListener discardButtonClickListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.delete_all_dialog_msg);
+        builder.setPositiveButton(R.string.dialog_delete, discardButtonClickListener);
+        builder.setNegativeButton(R.string.dialog_abort, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    // User clicked "Abort" button, dismiss dialogue.
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void showUnsavedChangesDialog(
+            DialogInterface.OnClickListener discardButtonClickListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.unsaved_changes_dialog_msg);
+        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    // User clicked "Keep editing" button, dismiss dialogue.
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!mProductChanged) {
+            super.onBackPressed();
+            return;
+        }
+
+        DialogInterface.OnClickListener discardButtonClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // User clicked "Discard" button, close the current activity.
+                        finish();
+                    }
+                };
+        showUnsavedChangesDialog(discardButtonClickListener);
+    }
+
     public void cancel(View view) {
         // Do nothing, just return to MainActivity parent
         finish();
+    }
+
+    public void order(View view) {
+        String productName = mNameEditText.getText().toString().trim();
+        int stock = 0;
+        if (mStockEditText.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, R.string.editor_oder_no_stock, Toast.LENGTH_SHORT).show();
+        } else {
+            stock = Integer.parseInt(mStockEditText.getText().toString().trim());
+
+            if (productName.isEmpty()) {
+                Toast.makeText(this, R.string.no_name_product, Toast.LENGTH_SHORT).show();
+            } else {
+                Intent sendMail = new Intent(Intent.ACTION_SENDTO);
+                String uriAsString = "mailto:" + Uri.encode("supplieremail@company.com") +
+                        "?subject=" + Uri.encode("Order request for " + productName) +
+                        "&body=" + Uri.encode("We'd like to place an order for " + stock +
+                        " of the " + productName + " product.");
+                sendMail.setData(Uri.parse(uriAsString));
+                startActivity(Intent.createChooser(sendMail, "Send email"));
+            }
+        }
     }
 
     public void save(View view) {

@@ -2,6 +2,7 @@ package com.example.zachg.inventoree;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -78,16 +80,47 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.main_action_delete) {
-            int rowsDeleted = wipeData();
-            if (rowsDeleted > 0) {
-                getContentResolver().notifyChange(ProductEntry.CONTENT_URI, null);
-                Toast.makeText(this, R.string.main_delete_success, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, R.string.main_delete_failure, Toast.LENGTH_SHORT).show();
-            }
+            DialogInterface.OnClickListener deleteButtonClickListener =
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // User clicked "Delete" button, navigate to parent activity.
+                            int rowsDeleted = wipeData();
+                            if (rowsDeleted > 0) {
+                                getContentResolver().notifyChange(ProductEntry.CONTENT_URI, null);
+                                Toast.makeText(getApplicationContext(),
+                                        R.string.main_delete_success, Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(),
+                                        R.string.main_delete_failure, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    };
+            // Show a dialog that notifies the user they have unsaved changes
+            confirmDeleteDialog(deleteButtonClickListener);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void confirmDeleteDialog(
+            DialogInterface.OnClickListener discardButtonClickListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.delete_all_dialog_msg);
+        builder.setPositiveButton(R.string.dialog_delete, discardButtonClickListener);
+        builder.setNegativeButton(R.string.dialog_abort, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    // User clicked "Abort" button, dismiss dialogue.
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     int wipeData() {

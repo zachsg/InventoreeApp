@@ -29,6 +29,9 @@
     <string name="editor_save_button">Save</string>
     <string name="editor_increment_button">+</string>
     <string name="editor_decrement_button">-</string>
+    <string name="editor_order_button">Submit order</string>
+    <string name="editor_order_no_name">You can\'t order a product without a name</string>
+    <string name="editor_oder_no_stock">You can\'t place an order for quantity of 0</string>
 
     <!-- Toast string for EditorActivity -->
     <string name="no_name_product">Product must have a name</string>
@@ -44,4 +47,13 @@
     <string name="tools_list_item_product">Product name</string>
     <string name="tools_list_item_price_val">0.00</string>
     <string name="tools_list_item_stock_val">0</string>
+
+    <!-- Dialogue strings -->
+    <string name="unsaved_changes_dialog_msg">Discard changes and quit editing?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep Editing</string>
+    <string name="delete_dialog_msg">Are you sure you want to delete this product?</string>
+    <string name="delete_all_dialog_msg">Are you sure you want to delete all products?</string>
+    <string name="dialog_delete">Delete</string>
+    <string name="dialog_abort">Abort</string>
 </resources>

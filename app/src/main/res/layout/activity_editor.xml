@@ -52,7 +52,7 @@
         android:id="@+id/product_price_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/product_name_label"
         style="@style/EditorLabels"
         app:layout_constraintTop_toBottomOf="@id/product_name_label"
         app:layout_constraintBottom_toBottomOf="@id/product_price_input"
@@ -63,7 +63,7 @@
         android:layout_width="40dp"
         android:layout_height="30dp"
         android:background="@drawable/button_border"
-        app:layout_constraintLeft_toRightOf="@id/separator"
+        app:layout_constraintLeft_toLeftOf="@id/product_price_input"
         app:layout_constraintTop_toBottomOf="@id/product_price_input"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:textColor="@color/colorPrimary"
@@ -106,7 +106,7 @@
         android:id="@+id/product_stock_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@id/product_price_label"
         style="@style/EditorLabels"
         app:layout_constraintTop_toBottomOf="@id/product_price_label"
         app:layout_constraintBottom_toBottomOf="@id/product_stock_input"
@@ -121,6 +121,8 @@
         android:background="@android:color/transparent"
         android:textColor="@color/colorAccent"
         android:onClick="cancel"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/editor_cancel_button"/>
 
     <Button
@@ -130,7 +132,22 @@
         app:layout_constraintBottom_toTopOf="@id/cancel_button"
         app:layout_constraintRight_toRightOf="parent"
         android:textColor="@color/colorPrimary"
+        android:background="@drawable/button_border"
         android:onClick="save"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:text="@string/editor_save_button"/>
+
+    <Button
+        android:id="@+id/order_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="order"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:background="@android:color/transparent"
+        android:text="@string/editor_order_button"/>
 
 </android.support.constraint.ConstraintLayout>
