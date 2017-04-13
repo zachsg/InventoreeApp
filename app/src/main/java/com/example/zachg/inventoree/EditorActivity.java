@@ -83,29 +83,32 @@ public class EditorActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.editor_action_delete:
-                DialogInterface.OnClickListener deleteButtonClickListener =
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                // User clicked "Delete" button, navigate to parent activity.
-                                int rowsDeleted =
-                                        getContentResolver().delete(mCurrentProductUri, null, null);
-                                if (rowsDeleted > 0) {
-                                    getContentResolver().notifyChange(mCurrentProductUri, null);
-                                    Toast.makeText(getApplicationContext(),
-                                            R.string.editor_delete_success,
-                                            Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(getApplicationContext(),
-                                            R.string.editor_delete_failure,
-                                            Toast.LENGTH_SHORT).show();
+                if (mCurrentProductUri != null) {
+                    DialogInterface.OnClickListener deleteButtonClickListener =
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    // User clicked "Delete" button, navigate to parent activity.
+                                    int rowsDeleted =
+                                            getContentResolver().delete(mCurrentProductUri, null, null);
+                                    if (rowsDeleted > 0) {
+                                        getContentResolver().notifyChange(mCurrentProductUri, null);
+                                        Toast.makeText(getApplicationContext(),
+                                                R.string.editor_delete_success,
+                                                Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(getApplicationContext(),
+                                                R.string.editor_delete_failure,
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                    finish();
                                 }
-                                finish();
-                            }
-                        };
-                // Show a dialog that notifies the user they have unsaved changes
-                confirmDeleteDialog(deleteButtonClickListener);
-                return true;
+                            };
+                    // Show a dialog that notifies the user they have unsaved changes
+                    confirmDeleteDialog(deleteButtonClickListener);
+                    return true;
+                }
+                finish();
             case android.R.id.home:
                 if (!mProductChanged) {
                     NavUtils.navigateUpFromSameTask(EditorActivity.this);
@@ -133,7 +136,7 @@ public class EditorActivity extends AppCompatActivity
     private void confirmDeleteDialog(
             DialogInterface.OnClickListener discardButtonClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.delete_all_dialog_msg);
+        builder.setMessage(R.string.delete_dialog_msg);
         builder.setPositiveButton(R.string.dialog_delete, discardButtonClickListener);
         builder.setNegativeButton(R.string.dialog_abort, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -188,7 +191,20 @@ public class EditorActivity extends AppCompatActivity
 
     public void cancel(View view) {
         // Do nothing, just return to MainActivity parent
-        finish();
+        if (!mProductChanged) {
+            finish();
+            return;
+        }
+
+        DialogInterface.OnClickListener discardButtonClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // User clicked "Discard" button, close the current activity.
+                        finish();
+                    }
+                };
+        showUnsavedChangesDialog(discardButtonClickListener);
     }
 
     public void order(View view) {

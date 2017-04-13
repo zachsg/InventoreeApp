@@ -6,7 +6,7 @@
 
     <item
         android:id="@+id/editor_action_delete"
-        android:title="@string/main_action_delete"
+        android:title="@string/editor_action_delete"
         app:showAsAction="never" />
 
 </menu>
