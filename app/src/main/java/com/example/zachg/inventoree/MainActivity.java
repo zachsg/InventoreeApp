@@ -122,6 +122,10 @@ public class MainActivity extends AppCompatActivity
         alertDialog.show();
     }
 
+    /**
+     * Wipes the database of all products.
+     * @return the number of rows deleted.
+     */
     int wipeData() {
         return getContentResolver().delete(ProductEntry.CONTENT_URI, null, null);
     }

@@ -34,6 +34,7 @@ public class EditorActivity extends AppCompatActivity
     private EditText mPriceEditText;
     private EditText mStockEditText;
 
+    /* Track the current quantity of a given product */
     private int mCurrentStock = 0;
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
@@ -133,6 +134,9 @@ public class EditorActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Dialog for when user is trying to perform destructive delete action on product.
+     */
     private void confirmDeleteDialog(
             DialogInterface.OnClickListener discardButtonClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -152,6 +156,9 @@ public class EditorActivity extends AppCompatActivity
         alertDialog.show();
     }
 
+    /**
+     * Dialog for when user is trying to exit activity with unsaved changes.
+     */
     private void showUnsavedChangesDialog(
             DialogInterface.OnClickListener discardButtonClickListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -171,6 +178,11 @@ public class EditorActivity extends AppCompatActivity
         alertDialog.show();
     }
 
+    /**
+     * Handle when back button is pressed.  If there are unsaved changes, confirm discard
+     * of those changes via dialog.  If no unsaved changes, then just finish activity and return
+     * to parent/caller.
+     */
     @Override
     public void onBackPressed() {
         if (!mProductChanged) {
@@ -189,8 +201,11 @@ public class EditorActivity extends AppCompatActivity
         showUnsavedChangesDialog(discardButtonClickListener);
     }
 
+    /**
+     * When cancel button is pressed.  If unsaved changes, confirm discard of those changes
+     * via dialog.  If no unsaved changes, then just finsih activity & return to parent/caller.
+     */
     public void cancel(View view) {
-        // Do nothing, just return to MainActivity parent
         if (!mProductChanged) {
             finish();
             return;
@@ -207,6 +222,11 @@ public class EditorActivity extends AppCompatActivity
         showUnsavedChangesDialog(discardButtonClickListener);
     }
 
+    /**
+     * When order button is pressed, start mail intent to handle action.
+     * Performs necessary checks for valid product (has a name, has a > 0 quantity).
+     * Triggers intent for email and includes email subject, body, and to-address for callee.
+     */
     public void order(View view) {
         String productName = mNameEditText.getText().toString().trim();
         int stock = 0;
@@ -229,6 +249,11 @@ public class EditorActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * When save is pressed, saves the product to the database.
+     * If the product is new, then insert is run to create a new row.
+     * If the product exists, then update is called to modify the existing row.
+     */
     public void save(View view) {
         String name = mNameEditText.getText().toString().trim();
 
@@ -270,6 +295,10 @@ public class EditorActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Used for decrementing the stock of a given product by one each time pressed.  Will not go
+     * below 0, but has no upper limit.
+     */
     public void decrementStock(View view) {
         if (!mStockEditText.getText().toString().trim().isEmpty()) {
             mCurrentStock = Integer.parseInt(mStockEditText.getText().toString().trim());
@@ -280,6 +309,9 @@ public class EditorActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Used for incrementing the stock of a given product by one each time pressed.
+     */
     public void incrementStock(View view) {
         if (!mStockEditText.getText().toString().trim().isEmpty()) {
             mCurrentStock = Integer.parseInt(mStockEditText.getText().toString().trim());
@@ -318,7 +350,5 @@ public class EditorActivity extends AppCompatActivity
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
-    }
+    public void onLoaderReset(Loader<Cursor> loader) { }
 }
