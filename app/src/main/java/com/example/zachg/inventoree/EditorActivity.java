@@ -67,6 +67,7 @@ public class EditorActivity extends AppCompatActivity
             mCurrentProductUri = uri;
             getSupportLoaderManager().initLoader(EXISTING_PRODUCT_LOADER, null, this);
         } else {
+            mCurrentProductUri = null;
             getSupportActionBar().setTitle(R.string.editor_title_new);
         }
     }
@@ -74,7 +75,9 @@ public class EditorActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_editor, menu);
+        if (mCurrentProductUri != null) {
+            getMenuInflater().inflate(R.menu.menu_editor, menu);
+        }
         return true;
     }
 
@@ -85,31 +88,29 @@ public class EditorActivity extends AppCompatActivity
         switch (id) {
             case R.id.editor_action_delete:
                 if (mCurrentProductUri != null) {
-                    if (mProductChanged) {
-                        DialogInterface.OnClickListener deleteButtonClickListener =
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        // User clicked "Delete" button, navigate to parent activity.
-                                        int rowsDeleted =
-                                                getContentResolver().delete(mCurrentProductUri, null, null);
-                                        if (rowsDeleted > 0) {
-                                            getContentResolver().notifyChange(mCurrentProductUri, null);
-                                            Toast.makeText(getApplicationContext(),
-                                                    R.string.editor_delete_success,
-                                                    Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(getApplicationContext(),
-                                                    R.string.editor_delete_failure,
-                                                    Toast.LENGTH_SHORT).show();
-                                        }
-                                        finish();
+                    DialogInterface.OnClickListener deleteButtonClickListener =
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    // User clicked "Delete" button, navigate to parent activity.
+                                    int rowsDeleted =
+                                            getContentResolver().delete(mCurrentProductUri, null, null);
+                                    if (rowsDeleted > 0) {
+                                        getContentResolver().notifyChange(mCurrentProductUri, null);
+                                        Toast.makeText(getApplicationContext(),
+                                                R.string.editor_delete_success,
+                                                Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(getApplicationContext(),
+                                                R.string.editor_delete_failure,
+                                                Toast.LENGTH_SHORT).show();
                                     }
-                                };
-                        // Show a dialog that notifies the user they have unsaved changes
-                        confirmDeleteDialog(deleteButtonClickListener);
-                        return true;
-                    }
+                                    finish();
+                                }
+                            };
+                    // Show a dialog that notifies the user they have unsaved changes
+                    confirmDeleteDialog(deleteButtonClickListener);
+                    return true;
                 }
                 finish();
             case android.R.id.home:
@@ -263,6 +264,7 @@ public class EditorActivity extends AppCompatActivity
         if (!mPriceEditText.getText().toString().trim().isEmpty()) {
             price = Double.parseDouble(mPriceEditText.getText().toString().trim());
         }
+
         Integer stock = 0;
         if (!mStockEditText.getText().toString().trim().isEmpty()) {
             stock = Integer.parseInt(mStockEditText.getText().toString().trim());
@@ -270,6 +272,10 @@ public class EditorActivity extends AppCompatActivity
 
         if (name.isEmpty()) {
             Toast.makeText(this, R.string.no_name_product, Toast.LENGTH_SHORT).show();
+        } else if (mPriceEditText.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, R.string.no_price_product, Toast.LENGTH_SHORT).show();
+        } else if (mStockEditText.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, R.string.no_stock_product, Toast.LENGTH_SHORT).show();
         } else {
             ContentValues values = new ContentValues();
             values.put(ProductEntry.COLUMN_PRODUCT_NAME, name);
