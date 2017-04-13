@@ -6,6 +6,7 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.zachg.inventoree.data.ProductContract.ProductEntry;
@@ -61,5 +62,13 @@ public class ProductCursorAdapter extends CursorAdapter {
         nameView.setText(name);
         priceView.setText(price.toString());
         stockView.setText(stock.toString());
+
+        /* If a product is out of stock, hide the buy button */
+        Button buyButton = (Button) view.findViewById(R.id.buy_button);
+        if (stock == 0) {
+            buyButton.setVisibility(View.INVISIBLE);
+        } else {
+            buyButton.setVisibility(View.VISIBLE);
+        }
     }
 }
