@@ -35,6 +35,8 @@
 
     <!-- Toast string for EditorActivity -->
     <string name="no_name_product">Product must have a name</string>
+    <string name="no_price_product">Product must have a price</string>
+    <string name="no_stock_product">Product must have a quantity (stock)</string>
     <string name="product_update_success">Product updated</string>
     <string name="product_update_failure">Failed to update product</string>
     <string name="product_save_success">Product saved</string>
