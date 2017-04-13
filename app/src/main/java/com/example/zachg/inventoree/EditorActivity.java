@@ -85,29 +85,31 @@ public class EditorActivity extends AppCompatActivity
         switch (id) {
             case R.id.editor_action_delete:
                 if (mCurrentProductUri != null) {
-                    DialogInterface.OnClickListener deleteButtonClickListener =
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    // User clicked "Delete" button, navigate to parent activity.
-                                    int rowsDeleted =
-                                            getContentResolver().delete(mCurrentProductUri, null, null);
-                                    if (rowsDeleted > 0) {
-                                        getContentResolver().notifyChange(mCurrentProductUri, null);
-                                        Toast.makeText(getApplicationContext(),
-                                                R.string.editor_delete_success,
-                                                Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(getApplicationContext(),
-                                                R.string.editor_delete_failure,
-                                                Toast.LENGTH_SHORT).show();
+                    if (mProductChanged) {
+                        DialogInterface.OnClickListener deleteButtonClickListener =
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        // User clicked "Delete" button, navigate to parent activity.
+                                        int rowsDeleted =
+                                                getContentResolver().delete(mCurrentProductUri, null, null);
+                                        if (rowsDeleted > 0) {
+                                            getContentResolver().notifyChange(mCurrentProductUri, null);
+                                            Toast.makeText(getApplicationContext(),
+                                                    R.string.editor_delete_success,
+                                                    Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(getApplicationContext(),
+                                                    R.string.editor_delete_failure,
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                        finish();
                                     }
-                                    finish();
-                                }
-                            };
-                    // Show a dialog that notifies the user they have unsaved changes
-                    confirmDeleteDialog(deleteButtonClickListener);
-                    return true;
+                                };
+                        // Show a dialog that notifies the user they have unsaved changes
+                        confirmDeleteDialog(deleteButtonClickListener);
+                        return true;
+                    }
                 }
                 finish();
             case android.R.id.home:
