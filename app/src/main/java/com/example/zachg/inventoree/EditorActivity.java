@@ -297,6 +297,8 @@ public class EditorActivity extends AppCompatActivity
             Toast.makeText(this, R.string.no_price_product, Toast.LENGTH_SHORT).show();
         } else if (mStockEditText.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, R.string.no_stock_product, Toast.LENGTH_SHORT).show();
+        } else if (mImageMap == null) {
+            Toast.makeText(this, R.string.no_image_product, Toast.LENGTH_SHORT).show();
         } else {
             ContentValues values = new ContentValues();
             values.put(ProductEntry.COLUMN_PRODUCT_NAME, name);

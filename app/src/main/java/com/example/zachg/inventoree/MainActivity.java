@@ -20,7 +20,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.zachg.inventoree.data.ProductContract.ProductEntry;
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         ListView listView = (ListView) findViewById(R.id.list);
-        View emptyView = (TextView) findViewById(R.id.empty_view);
+        View emptyView = findViewById(R.id.empty_text_view);
         listView.setEmptyView(emptyView);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

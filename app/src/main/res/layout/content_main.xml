@@ -14,13 +14,15 @@
         android:id="@+id/list"/>
 
     <TextView
-        android:id="@+id/empty_view"
+        android:id="@+id/empty_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        tools:text="@string/tools_empty"/>
+        android:drawableTop="@mipmap/ic_empty_state"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+        android:text="@string/tools_empty"/>
 
 </android.support.constraint.ConstraintLayout>
