@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.zachg.inventoree.data.ProductContract.ProductEntry;
@@ -24,12 +25,15 @@ import com.example.zachg.inventoree.data.ProductContract.ProductEntry;
 public class EditorActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final int PICTURE_SELECTOR = 100;
+
     private static final int EXISTING_PRODUCT_LOADER = 0;
     private Uri mCurrentProductUri;
 
     private boolean mProductChanged = false;
 
     /* EditText fields for gathering user input */
+    private ImageButton imageButton;
     private EditText mNameEditText;
     private EditText mPriceEditText;
     private EditText mStockEditText;
@@ -53,6 +57,7 @@ public class EditorActivity extends AppCompatActivity
         Intent intent = getIntent();
         Uri uri = intent.getData();
 
+        imageButton = (ImageButton) findViewById(R.id.image_button);
         mNameEditText = (EditText) findViewById(R.id.product_name_input);
         mPriceEditText = (EditText) findViewById(R.id.product_price_input);
         mStockEditText = (EditText) findViewById(R.id.product_stock_input);
@@ -326,6 +331,26 @@ public class EditorActivity extends AppCompatActivity
         }
         mCurrentStock++;
         mStockEditText.setText(Integer.toString(mCurrentStock));
+    }
+
+    public void openImageChooser(View view) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Picture Selector"), PICTURE_SELECTOR);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == PICTURE_SELECTOR) {
+                // Get the url from data
+                Uri selectedImageUri = data.getData();
+                if (null != selectedImageUri) {
+                    // Set the image in ImageView
+                    imageButton.setImageURI(selectedImageUri);
+                }
+            }
+        }
     }
 
     @Override

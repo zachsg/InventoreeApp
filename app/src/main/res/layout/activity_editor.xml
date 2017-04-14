@@ -9,13 +9,13 @@
     tools:context="com.example.zachg.inventoree.EditorActivity">
 
     <TextView
-        android:id="@+id/product_name_label"
+        android:id="@+id/product_image_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         style="@style/EditorLabels"
-        android:text="@string/editor_product_name_label" />
+        android:text="@string/editor_product_image_label" />
 
     <TextView
         android:id="@+id/separator"
@@ -25,16 +25,40 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/product_name_label"
+        app:layout_constraintLeft_toRightOf="@+id/product_image_label"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"/>
+
+    <ImageButton
+        android:id="@+id/image_button"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:cropToPadding="false"
+        app:layout_constraintLeft_toRightOf="@id/separator"
+        app:layout_constraintTop_toTopOf="parent"
+        android:onClick="openImageChooser"
+        android:src="@mipmap/ic_product_image"/>
+
+    <TextView
+        android:id="@+id/product_name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image_button"
+        style="@style/EditorLabels"
+        android:text="@string/editor_product_name_label" />
 
     <EditText
         android:id="@+id/product_name_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@id/separator"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image_button"
         style="@style/EditorInputs"
         android:hint="@string/editor_product_name_hint"/>
 
