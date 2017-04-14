@@ -4,6 +4,8 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
@@ -12,6 +14,8 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -22,13 +26,22 @@ import android.widget.Toast;
 
 import com.example.zachg.inventoree.data.ProductContract.ProductEntry;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
+import static android.R.attr.bitmap;
+
 public class EditorActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final int PICTURE_SELECTOR = 100;
+    private static final int PHOTO_SELECT = 100;
 
     private static final int EXISTING_PRODUCT_LOADER = 0;
     private Uri mCurrentProductUri;
+
+    // Store the image the user selects
+    private Bitmap mImageMap;
 
     private boolean mProductChanged = false;
 
@@ -40,6 +53,9 @@ public class EditorActivity extends AppCompatActivity
 
     /* Track the current quantity of a given product */
     private int mCurrentStock = 0;
+
+    /** Tag for the log messages */
+    public static final String LOG_TAG = EditorActivity.class.getSimpleName();
 
     private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
         @Override
@@ -286,6 +302,16 @@ public class EditorActivity extends AppCompatActivity
             values.put(ProductEntry.COLUMN_PRODUCT_NAME, name);
             values.put(ProductEntry.COLUMN_PRODUCT_PRICE, price);
             values.put(ProductEntry.COLUMN_PRODUCT_STOCK, stock);
+            if (mImageMap != null) {
+                ByteArrayOutputStream bOS = new ByteArrayOutputStream();
+
+                // Compress the image so it's faster & easier to store
+                mImageMap.compress(Bitmap.CompressFormat.JPEG, 100, bOS);
+
+                // Convert to byte array & store the blob in the database
+                byte[] image = bOS.toByteArray();
+                values.put(ProductEntry.COLUMN_PRODUCT_PHOTO, image);
+            }
 
             if (mCurrentProductUri != null) { // Updating and existing product in inventory DB
                 int rowsUpdated =
@@ -337,17 +363,29 @@ public class EditorActivity extends AppCompatActivity
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Picture Selector"), PICTURE_SELECTOR);
+        startActivityForResult(Intent.createChooser(intent, "Picture Selector"), PHOTO_SELECT);
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == PICTURE_SELECTOR) {
-                // Get the url from data
-                Uri selectedImageUri = data.getData();
-                if (null != selectedImageUri) {
-                    // Set the image in ImageView
-                    imageButton.setImageURI(selectedImageUri);
+    public void onActivityResult(int request, int result, Intent data) {
+        if (result == RESULT_OK) {
+            if (request == PHOTO_SELECT) {
+                // Get the url & set the image to imageButton
+                Uri imageUri = data.getData();
+                if (imageUri != null) {
+                    try {
+                        InputStream input = getContentResolver().openInputStream(imageUri);
+                        mImageMap = BitmapFactory.decodeStream(input);
+
+                        /* Instead of storing full sized image, scale it down to the size we'll
+                         * display it at anyway.
+                         */
+                        mImageMap = Bitmap.createScaledBitmap(mImageMap, 150, 150, false);
+
+                        // Set imageview to the image selected
+                        imageButton.setImageBitmap(mImageMap);
+                    } catch (FileNotFoundException fne) {
+                        Log.e(LOG_TAG, "Unable to locate file with URI " + imageUri);
+                    }
                 }
             }
         }
@@ -359,7 +397,8 @@ public class EditorActivity extends AppCompatActivity
                 ProductEntry._ID,
                 ProductEntry.COLUMN_PRODUCT_NAME,
                 ProductEntry.COLUMN_PRODUCT_PRICE,
-                ProductEntry.COLUMN_PRODUCT_STOCK
+                ProductEntry.COLUMN_PRODUCT_STOCK,
+                ProductEntry.COLUMN_PRODUCT_PHOTO
         };
 
         return new CursorLoader(this, mCurrentProductUri, projection, null, null, null);
@@ -368,13 +407,21 @@ public class EditorActivity extends AppCompatActivity
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.moveToFirst()) {
-            int nameCol = data.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME);
+            int nameCol  = data.getColumnIndex(ProductEntry.COLUMN_PRODUCT_NAME);
             int priceCol = data.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PRICE);
             int stockCol = data.getColumnIndex(ProductEntry.COLUMN_PRODUCT_STOCK);
+            int imageCol = data.getColumnIndex(ProductEntry.COLUMN_PRODUCT_PHOTO);
 
             String name = data.getString(nameCol);
             Double price = data.getDouble(priceCol);
             Integer stock = data.getInt(stockCol);
+
+            if (data.getBlob(imageCol) != null) {
+                // Convert the image's byte array from the database into a usable bitmap
+                byte[] b = data.getBlob(imageCol);
+                Bitmap imageMap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                imageButton.setImageBitmap(imageMap);
+            }
 
             mNameEditText.setText(name);
             mPriceEditText.setText(price.toString());
@@ -384,4 +431,25 @@ public class EditorActivity extends AppCompatActivity
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) { }
+
+    /**
+     * @return bitmap (from given string)
+     */
+    public Bitmap stringToBitMap(String encodedString){
+        try {
+            byte [] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch(Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
+
+    public String bitMapToString(Bitmap bitmap){
+        ByteArrayOutputStream baos = new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
+        byte [] b = baos.toByteArray();
+        return Base64.encodeToString(b, Base64.DEFAULT);
+    }
 }
