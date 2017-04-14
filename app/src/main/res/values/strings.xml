@@ -19,7 +19,9 @@
     <string name="list_item_buy_button">Buy</string>
 
     <!-- Labels, buttons, hints for EditorActivity fields -->
-    <string name="editor_product_name_label">Product name</string>
+    <string name="editor_product_image_desc">Product picture</string>
+    <string name="editor_product_image_label">Picture</string>
+    <string name="editor_product_name_label">Name</string>
     <string name="editor_product_price_label">Price</string>
     <string name="editor_product_stock_label">Stock</string>
     <string name="editor_product_name_hint">Type product name</string>
