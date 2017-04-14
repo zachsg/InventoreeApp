@@ -22,7 +22,7 @@ public class ProductDBHelper extends SQLiteOpenHelper {
                     ProductEntry.COLUMN_PRODUCT_NAME + " TEXT NOT NULL," +
                     ProductEntry.COLUMN_PRODUCT_PRICE + " INTEGER NOT NULL," +
                     ProductEntry.COLUMN_PRODUCT_STOCK + " INTEGER NOT NULL," +
-                    ProductEntry.COLUMN_PRODUCT_PICTURE + " TEXT);";
+                    ProductEntry.COLUMN_PRODUCT_PHOTO + " BLOB);";
 
     private static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + ProductEntry.TABLE_NAME;

@@ -2,11 +2,13 @@ package com.example.zachg.inventoree;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.zachg.inventoree.data.ProductContract.ProductEntry;
