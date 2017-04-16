@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.res.ResourcesCompat;
@@ -297,9 +296,9 @@ public class EditorActivity extends AppCompatActivity
         } else if (mStockEditText.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, R.string.no_stock_product, Toast.LENGTH_SHORT).show();
         } else if (mImageButton.getDrawable().getConstantState().equals(
-                ResourcesCompat.getDrawable(getResources(), R.mipmap.ic_product_image, null
-                ).getConstantState())) {
-            Toast.makeText(this, R.string.no_image_product, Toast.LENGTH_SHORT).show();
+                    ResourcesCompat.getDrawable(getResources(), R.mipmap.ic_product_image, null
+                    ).getConstantState())) {
+                Toast.makeText(this, R.string.no_image_product, Toast.LENGTH_SHORT).show();
         } else {
             ContentValues values = new ContentValues();
             values.put(ProductEntry.COLUMN_PRODUCT_NAME, name);
