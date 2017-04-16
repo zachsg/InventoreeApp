@@ -7,14 +7,12 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -142,9 +140,7 @@ public class MainActivity extends AppCompatActivity
         Cursor cursor =
                 getContentResolver().query(uri, projection, null, null, null);
         if (cursor != null) {
-            Log.v("Button Pressed", "cursor not null...id is: " + id + ". pos is: " + position);
             if (cursor.getCount() > 0) {
-                Log.v("Button Pressed", "cursor not empty...");
                 cursor.moveToFirst();
                 int stockCol = cursor.getColumnIndex(ProductEntry.COLUMN_PRODUCT_STOCK);
                 int stock = cursor.getInt(stockCol);
