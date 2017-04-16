@@ -42,15 +42,6 @@ public class MainActivity extends AppCompatActivity
         View emptyView = findViewById(R.id.empty_text_view);
         listView.setEmptyView(emptyView);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, EditorActivity.class);
-                startActivity(intent);
-            }
-        });
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -119,6 +110,15 @@ public class MainActivity extends AppCompatActivity
         // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    /**
+     * Add a new product when the fab button is clicked.
+     * @param view the fab button.
+     */
+    public void addProduct(View view) {
+        Intent intent = new Intent(MainActivity.this, EditorActivity.class);
+        startActivity(intent);
     }
 
     /**
