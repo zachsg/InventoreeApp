@@ -164,14 +164,7 @@ public class EditorActivity extends AppCompatActivity
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.delete_dialog_msg);
         builder.setPositiveButton(R.string.dialog_delete, discardButtonClickListener);
-        builder.setNegativeButton(R.string.dialog_abort, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                if (dialog != null) {
-                    // User clicked "Abort" button, dismiss dialogue.
-                    dialog.dismiss();
-                }
-            }
-        });
+        builder.setNegativeButton(R.string.dialog_abort, null);
 
         // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
@@ -186,14 +179,7 @@ public class EditorActivity extends AppCompatActivity
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.unsaved_changes_dialog_msg);
         builder.setPositiveButton(R.string.discard, discardButtonClickListener);
-        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                if (dialog != null) {
-                    // User clicked "Keep editing" button, dismiss dialogue.
-                    dialog.dismiss();
-                }
-            }
-        });
+        builder.setNegativeButton(R.string.keep_editing, null);
 
         // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
