@@ -9,12 +9,13 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,8 +31,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import static android.R.attr.bitmap;
-
 public class EditorActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -46,7 +45,7 @@ public class EditorActivity extends AppCompatActivity
     private boolean mProductChanged = false;
 
     /* EditText fields for gathering user input */
-    private ImageButton imageButton;
+    private ImageButton mImageButton;
     private EditText mNameEditText;
     private EditText mPriceEditText;
     private EditText mStockEditText;
@@ -73,7 +72,7 @@ public class EditorActivity extends AppCompatActivity
         Intent intent = getIntent();
         Uri uri = intent.getData();
 
-        imageButton = (ImageButton) findViewById(R.id.image_button);
+        mImageButton = (ImageButton) findViewById(R.id.image_button);
         mNameEditText = (EditText) findViewById(R.id.product_name_input);
         mPriceEditText = (EditText) findViewById(R.id.product_price_input);
         mStockEditText = (EditText) findViewById(R.id.product_stock_input);
@@ -297,7 +296,9 @@ public class EditorActivity extends AppCompatActivity
             Toast.makeText(this, R.string.no_price_product, Toast.LENGTH_SHORT).show();
         } else if (mStockEditText.getText().toString().trim().isEmpty()) {
             Toast.makeText(this, R.string.no_stock_product, Toast.LENGTH_SHORT).show();
-        } else if (mImageMap == null) {
+        } else if (mImageButton.getDrawable().getConstantState().equals(
+                ResourcesCompat.getDrawable(getResources(), R.mipmap.ic_product_image, null
+                ).getConstantState())) {
             Toast.makeText(this, R.string.no_image_product, Toast.LENGTH_SHORT).show();
         } else {
             ContentValues values = new ContentValues();
@@ -384,7 +385,7 @@ public class EditorActivity extends AppCompatActivity
                         mImageMap = Bitmap.createScaledBitmap(mImageMap, 150, 150, false);
 
                         // Set imageview to the image selected
-                        imageButton.setImageBitmap(mImageMap);
+                        mImageButton.setImageBitmap(mImageMap);
                     } catch (FileNotFoundException fne) {
                         Log.e(LOG_TAG, "Unable to locate file with URI " + imageUri);
                     }
@@ -422,7 +423,7 @@ public class EditorActivity extends AppCompatActivity
                 // Convert the image's byte array from the database into a usable bitmap
                 byte[] b = data.getBlob(imageCol);
                 Bitmap imageMap = BitmapFactory.decodeByteArray(b, 0, b.length);
-                imageButton.setImageBitmap(imageMap);
+                mImageButton.setImageBitmap(imageMap);
             }
 
             mNameEditText.setText(name);
